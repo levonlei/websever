@@ -43,7 +43,7 @@ void WebServer::init(int port, string user, string passWord, string databaseName
     m_close_log = close_log;
     m_actormodel = actor_model;
 }
-
+//模式选择
 void WebServer::trig_mode()
 {
     //LT + LT
