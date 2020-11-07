@@ -36,7 +36,7 @@ void connection_pool::init(string url, string User, string PassWord, string DBNa
 	{
 		MYSQL *con = NULL;
 		con = mysql_init(con);
-
+                //错误输出
 		if (con == NULL)
 		{
 			LOG_ERROR("MySQL Error");
@@ -106,7 +106,7 @@ void connection_pool::DestroyPool()
 	lock.lock();
 	if (connList.size() > 0)
 	{
-		list<MYSQL *>::iterator it;
+		list<MYSQL *>::iterator it;//迭代
 		for (it = connList.begin(); it != connList.end(); ++it)
 		{
 			MYSQL *con = *it;
@@ -114,7 +114,7 @@ void connection_pool::DestroyPool()
 		}
 		m_CurConn = 0;
 		m_FreeConn = 0;
-		connList.clear();
+		connList.clear();//调用
 	}
 
 	lock.unlock();
@@ -123,7 +123,7 @@ void connection_pool::DestroyPool()
 //当前空闲的连接数
 int connection_pool::GetFreeConn()
 {
-	return this->m_FreeConn;
+	return this->m_FreeConn;//this指针的运用
 }
 
 connection_pool::~connection_pool()
