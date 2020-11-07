@@ -96,8 +96,9 @@ private:
     HTTP_CODE parse_content(char *text);//解析请求内容
     HTTP_CODE do_request();//响应
     char *get_line() { return m_read_buf + m_start_line; };//指向未处理字符
-    LINE_STATUS parse_line();
+    LINE_STATUS parse_line();//分析是请求报文的哪一部分
     void unmap();
+    //do_request调用
     bool add_response(const char *format, ...);
     bool add_content(const char *content);
     bool add_status_line(int status, const char *title);
@@ -117,14 +118,14 @@ private:
     int m_sockfd;
     sockaddr_in m_address;
     char m_read_buf[READ_BUFFER_SIZE];
-    int m_read_idx;
-    int m_checked_idx;
-    int m_start_line;
+    int m_read_idx;//缓冲区m_read_buf中最后一个字节的下一个位置
+    int m_checked_idx;//读取位置
+    int m_start_line;//已经解析的字符个数
     char m_write_buf[WRITE_BUFFER_SIZE];
     int m_write_idx;
-    CHECK_STATE m_check_state;
-    METHOD m_method;
-    char m_real_file[FILENAME_LEN];
+    CHECK_STATE m_check_state;//主状态机状态
+    METHOD m_method;//请求方法
+    char m_real_file[FILENAME_LEN];//存储读取文件名称
     char *m_url;
     char *m_version;
     char *m_host;
@@ -136,8 +137,8 @@ private:
     int m_iv_count;
     int cgi;        //是否启用的POST
     char *m_string; //存储请求头数据
-    int bytes_to_send;
-    int bytes_have_send;
+    int bytes_to_send;//未发送字节数
+    int bytes_have_send;//已发送字节数
     char *doc_root;
 
     map<string, string> m_users;
