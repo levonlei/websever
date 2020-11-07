@@ -15,7 +15,7 @@ const char *error_500_title = "Internal Error";
 const char *error_500_form = "There was an unusual problem serving the request file.\n";
 
 locker m_lock;
-map<string, string> users;
+map<string, string> users;//存放用户名以及密码
 
 void http_conn::initmysql_result(connection_pool *connPool)
 {
@@ -194,7 +194,8 @@ http_conn::LINE_STATUS http_conn::parse_line()
 }
 
 //循环读取客户数据，直到无数据可读或对方关闭连接
-//非阻塞ET工作模式下，需要一次性将数据读完
+//非阻塞ET工作模式下，需要一次性将数据读完，应用程序需要立刻处理该事件
+//LT：可以不立马处理
 bool http_conn::read_once()
 {
     if (m_read_idx >= READ_BUFFER_SIZE)
@@ -239,6 +240,7 @@ bool http_conn::read_once()
 }
 
 //解析http请求行，获得请求方法，目标url及http版本号
+//对每一行进行拆分
 http_conn::HTTP_CODE http_conn::parse_request_line(char *text)
 {
     m_url = strpbrk(text, " \t");
