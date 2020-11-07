@@ -580,7 +580,7 @@ bool http_conn::write()
         }
     }
 }
-bool http_conn::add_response(const char *format, ...)
+bool http_conn::add_response(const char *format, ...)//format可变形参的函数,省略号告诉编译器，当调用该函数时，可以有0个或者多个实参，而实参的类型未知。模仿scanf
 {
     if (m_write_idx >= WRITE_BUFFER_SIZE)
         return false;
