@@ -29,10 +29,10 @@
 class http_conn
 {
 public:
-    static const int FILENAME_LEN = 200;
-    static const int READ_BUFFER_SIZE = 2048;
-    static const int WRITE_BUFFER_SIZE = 1024;
-    enum METHOD
+    static const int FILENAME_LEN = 200;       //设置读取文件m_real_flie文件大小
+    static const int READ_BUFFER_SIZE = 2048;  //设置读缓冲区m_read_buff的大小
+    static const int WRITE_BUFFER_SIZE = 1024; //设置写缓冲区m_read_buff的大小
+    enum METHOD//枚举报文请求方式
     {
         GET = 0,
         POST,
@@ -44,13 +44,13 @@ public:
         CONNECT,
         PATH
     };
-    enum CHECK_STATE
+    enum CHECK_STATE//主状态机的状态
     {
         CHECK_STATE_REQUESTLINE = 0,
         CHECK_STATE_HEADER,
         CHECK_STATE_CONTENT
     };
-    enum HTTP_CODE
+    enum HTTP_CODE//报文解析结果
     {
         NO_REQUEST,
         GET_REQUEST,
@@ -61,7 +61,7 @@ public:
         INTERNAL_ERROR,
         CLOSED_CONNECTION
     };
-    enum LINE_STATUS
+    enum LINE_STATUS//从状态机状态
     {
         LINE_OK = 0,
         LINE_BAD,
@@ -73,12 +73,12 @@ public:
     ~http_conn() {}
 
 public:
-    void init(int sockfd, const sockaddr_in &addr, char *, int, int, string user, string passwd, string sqlname);
-    void close_conn(bool real_close = true);
-    void process();
-    bool read_once();
-    bool write();
-    sockaddr_in *get_address()
+    void init(int sockfd, const sockaddr_in &addr, char *, int, int, string user, string passwd, string sqlname);//http初始化
+    void close_conn(bool real_close = true);//关闭连接
+    void process();//封装处理函数
+    bool read_once();//读取数据（浏览器发送的全部数据）
+    bool write();//响应报文写入函数
+    sockaddr_in *get_address()//获取地址
     {
         return &m_address;
     }
@@ -89,13 +89,13 @@ public:
 
 private:
     void init();
-    HTTP_CODE process_read();
-    bool process_write(HTTP_CODE ret);
-    HTTP_CODE parse_request_line(char *text);
-    HTTP_CODE parse_headers(char *text);
-    HTTP_CODE parse_content(char *text);
-    HTTP_CODE do_request();
-    char *get_line() { return m_read_buf + m_start_line; };
+    HTTP_CODE process_read();//从m_read_buff读取数据
+    bool process_write(HTTP_CODE ret);//向m_wirte_buff写入响应数据
+    HTTP_CODE parse_request_line(char *text);//解析请求行
+    HTTP_CODE parse_headers(char *text);//解析头部
+    HTTP_CODE parse_content(char *text);//解析请求内容
+    HTTP_CODE do_request();//响应
+    char *get_line() { return m_read_buf + m_start_line; };//指向未处理字符
     LINE_STATUS parse_line();
     void unmap();
     bool add_response(const char *format, ...);
